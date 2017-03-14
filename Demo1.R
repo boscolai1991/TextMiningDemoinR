@@ -11,8 +11,8 @@ logitmat<-x%*%t(beta)
 
 pmat <- exp(logitmat)/(1+exp(logitmat))
 purchasemat <- (matrix(runif(m*n),nr=m,nc=n)<pmat) * 1
-#datamat <- apply(purchasemat,2,function(x){x[-sample(1:m,size=rpois(1,lambda))]<-NA;return(x)})
-datamat <- purchasemat
+datamat <- apply(purchasemat,2,function(x){x[-sample(1:m,size=rpois(1,lambda))]<-NA;return(x)})
+#datamat <- purchasemat
 
 
 beta0 <- matrix(rnorm(n*k),nr=n,nc=k)
@@ -23,7 +23,7 @@ shrink<-0.100
 
 VAL<-NULL
 
-for(i in 1:100000){
+for(i in 1:10000){
   diff<-(x0%*%t(beta0) - datamat)
   diff[is.na(diff)]<-0
   x1 <- x0 - learnr*(diff%*%beta0 + shrink*x0)
@@ -31,11 +31,11 @@ for(i in 1:100000){
   x0<-x1
   beta0<-beta1
   #VAL<-c(VAL,sum(diff^2,na.rm = TRUE))
-  print(sum(diff^2,na.rm = TRUE))
+  #print(sum(diff^2,na.rm = TRUE))
 }
 
-
-for(i in 1:100000){
+
+for(i in 1:10000){
   diff<--(2*datamat-1)*(x0%*%t(beta0))
   diff<-exp(diff)/(1+exp(diff))
   diff<--(2*datamat-1)*diff
@@ -48,5 +48,5 @@ for(i in 1:100000){
   logitmat0<-x0%*%t(beta0)
   pmat0 <- exp(logitmat0)/(1+exp(logitmat0))
   ll<-sum(log(pmat0[(!is.na(datamat))&datamat==1]))+sum(log((1-pmat0)[(!is.na(datamat))&datamat==0]))
-  print(ll)
+  #print(ll)
 }
