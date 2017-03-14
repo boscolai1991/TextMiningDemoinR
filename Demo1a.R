@@ -39,3 +39,12 @@ for(i in 1:10000){
   #VAL<-c(VAL,sum(diff^2,na.rm = TRUE))
   print(sum(diff^2,na.rm = TRUE))
 }
+
+# prediction
+predictmat <- x0%*%t(beta0)
+resmat <- round(predictmat)
+resmat[round(predictmat)<1]<-""
+resmat[round(predictmat)==1]<-"click"
+resmat[round(predictmat)==2]<-"favourite"
+resmat[round(predictmat)>=3]<-"purchased"
+print(resmat)
